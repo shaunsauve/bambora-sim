@@ -1,17 +1,24 @@
+#!/usr/bin/env python3
 
+import argparse
+import sys
 import time
 from datetime import datetime
 
 import jsonpickle
 from flask import Flask, request, jsonify, Response
 
+from limited_size_dictionary import LimitedSizeDict
 from utils import b58encode_int, next_count
+
+RECORD_LIMIT = 5000
 
 # 6 digit encoded epoch time when the server instance was started
 _serial = b58encode_int(int(time.time()))
-_card_records = {}
-_profile_records = {}
-_payment_records = {}
+_card_records = LimitedSizeDict(size_limit=RECORD_LIMIT)
+_profile_records = LimitedSizeDict(size_limit=RECORD_LIMIT)
+_payment_records = LimitedSizeDict(size_limit=RECORD_LIMIT)
+_strict_mode = False
 
 app = Flask(__name__)
 
@@ -34,7 +41,8 @@ def endpoint_tokenize_card():
 			'message': ''
 		}
 	}
-	_card_records[new_card_token] = new_card_record
+	if _strict_mode:
+		_card_records[new_card_token] = new_card_record
 	return jsonify(new_card_record['response'])
 
 
@@ -42,9 +50,11 @@ def endpoint_tokenize_card():
 def endpoint_create_profile():
 	# a multi-use token
 	card_token = request.json['token']['code']
-	card_record = _card_records.get(card_token, None)
-	if not card_record:
-		return jsonify({'message':f"unknown card token '{card_token}'"}), 422
+
+	if _strict_mode:
+		card_record = _card_records.get(card_token, None)
+		if not card_record:
+			return jsonify({'message':f"unknown card token '{card_token}'"}), 422
 
 	new_profile_token = _generate_bogus_bamdora_token('P', card_token)
 	new_profile_record = {
@@ -56,7 +66,8 @@ def endpoint_create_profile():
 			'message': ''
 		}
 	}
-	_profile_records[new_profile_token] = new_profile_record
+	if _strict_mode:
+		_profile_records[new_profile_token] = new_profile_record
 	return jsonify(new_profile_record['response'])
 
 
@@ -66,13 +77,30 @@ def endpoint_create_payment():
 		return jsonify({'message':'can only simulate payment_profile payments'}), 422
 
 	profile_token = request.json['payment_profile']['customer_code']
-	profile_record = _profile_records[profile_token]
-	if not profile_record:
-		return jsonify({'message':f"unknown customer code '{profile_token}'"}), 422
+
+	if _strict_mode:
+		profile_record = _profile_records[profile_token]
+		if not profile_record:
+			return jsonify({'message':f"unknown customer code '{profile_token}'"}), 422
+
+		card_record = _card_records[profile_record['request']['token']['code']]
+	else:
+		card_record = {
+			'request': {
+				"number": '4030000010001234',
+				"expiry_month": "06",
+				"expiry_year": "19",
+				"cvd": "123"
+			},
+			'response': {
+				'token': _generate_bogus_bamdora_token('C', '4030000010001234'),
+				'code': 1,
+				'version': 1,
+				'message': ''
+			}
+		}
 
 	new_payment_id = 10000000 + next_count()
-	card_record = _card_records[profile_record['request']['token']['code']]
-
 	semi_canned_payment_response = {
 		"id": new_payment_id,
 		"authorizing_merchant_id": 367410000,
@@ -123,11 +151,19 @@ def endpoint_create_payment():
 		'request': request.json,
 		'response': semi_canned_payment_response
 	}
-	_payment_records[new_payment_id] = new_payment_record
+	if _strict_mode:
+		_payment_records[new_payment_id] = new_payment_record
+
 	# standard json library can't handle nested lists, so pull out the big guns
 	json_body = jsonpickle.encode(new_payment_record['response'])
 	return Response(json_body)
 
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		'-s', '--strict', help="enable strict mode which caches records and check for valid tokens", action='store_true')
+	args = vars(parser.parse_args())
+	_strict_mode = args.get('strict', False)
+
 	app.run(host='0.0.0.0', port=80)
