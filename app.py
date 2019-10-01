@@ -60,10 +60,21 @@ def endpoint_create_profile():
 	new_profile_record = {
 		'request': request.json,
 		'response': {
-			'token': new_profile_token,
 			'code': 1,
-			'version': 1,
-			'message': ''
+			'message': '',
+			'customer_code': new_profile_token,
+			'validation':  {
+				'id': '',
+				'approved': 1,
+				'message_id': 1,
+				'message': '',
+				'auth_code': '',
+				'trans_date': '',
+				'order_number': '',
+				'type': '',
+				'amount': 100,
+				'cvd_id': 1
+			}
 		}
 	}
 	if _strict_mode:

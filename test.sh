@@ -12,7 +12,7 @@ CARD_TOKEN=`curl $HOST/scripts/tokenization/tokens  \
      "cvd":"123"
   }' | jq -r '.token'`
 
-PROFILE_TOKEN=`curl http://localhost/v1/profiles  \
+PROFILE_TOKEN=`curl $HOST/v1/profiles  \
   -H "Authorization: Passcode your_encoded_payment_profile_passcode"  \
   -H "Content-Type: application/json" \
   -d '{
@@ -20,9 +20,9 @@ PROFILE_TOKEN=`curl http://localhost/v1/profiles  \
         "name":"John Doe",
         "code":"'$CARD_TOKEN'"
       }
-  }' | jq -r '.token'`
+  }' | jq -r '.customer_code'`
 
-curl http://localhost/v1/payments  \
+curl $HOST/v1/payments  \
   -H "Authorization: Passcode your_encoded_payment_passcode"  \
   -H "Content-Type: application/json" \
   -d '{
