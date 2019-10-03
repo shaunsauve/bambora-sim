@@ -34,3 +34,7 @@ curl $HOST/v1/payments  \
        "complete":"true"
      }
   }' | jq
+
+
+curl $HOST/v1/profiles/$PROFILE_TOKEN | jq
+curl $HOST/v1/profiles/$PROFILE_TOKEN/cards | jq
