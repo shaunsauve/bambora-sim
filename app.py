@@ -28,6 +28,8 @@ app = Flask(__name__)
 
 
 """
+	see https://dev.na.bambora.com/docs/references/payment_APIs/v1-0-5/
+
 	ProfileResponse {
 		code : number
 		message : string
@@ -111,7 +113,7 @@ app = Flask(__name__)
 
 
 def _generate_bogus_bamdora_token(prefix, seed):
-	# bambora example: "a11-b02846fb-626c-4939-8c73-e26415be8d0d"
+	# genuine bambora example: "a11-b02846fb-626c-4939-8c73-e26415be8d0d"
 	return f"{prefix}-{_serial}-{str(next_count()).zfill(4)}-{datetime.utcnow().strftime('%d%m%Y-%H%M-%S%f')}-{seed[-4:]}"
 
 
@@ -353,7 +355,6 @@ def endpoint_get_profile_cards(profile_id):
 			return jsonify({'message': f"unknown customer code '{profile_id}'"}), 400
 		profile_record = _generate_bogus_profile_record(profile_id)
 
-	response = dict(profile_record)
 	cards = []
 	for cc in profile_record['cards']:
 		cards.append(dict_filter(cc, exclude=['cvc']))
@@ -453,7 +454,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
 		'-s', '--strict', help="enable strict mode which check for valid tokens against cached records", action='store_true')
-	parser.add_argument('-n', '--nocache', help = "do not cache records", action = 'store_true')
+	parser.add_argument('-n', '--nocache', help="do not cache records", action = 'store_true')
 	args = vars(parser.parse_args())
 	_strict_mode = args.get('strict', False)
 	_enable_cache = not args.get('nocache', False)
