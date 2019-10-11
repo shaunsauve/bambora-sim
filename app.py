@@ -144,8 +144,8 @@ def _generate_empty_card_record(token=None):
 		'token': token or _generate_bogus_bamdora_token('C', '0000000000000000'),
 		'name': '',
 		'number': '0000000000000000',
-		'expiry_month': '00',
-		'expiry_year': '00',
+		'expiry_month': '12',
+		'expiry_year': '99',
 		'card_type': ''
 	}
 
