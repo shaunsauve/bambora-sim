@@ -497,7 +497,7 @@ def endpoint_create_payment():
 			]
 		}))
 
-s
+
 if __name__ == '__main__':
 	logger.setLevel(logging.DEBUG)
 	parser = argparse.ArgumentParser()
