@@ -1,5 +1,5 @@
 
-**Bambora** is a payment gateway.  This is a little simulator of some of their endpoints for use in testing.  Note that do already offer a sandbox for development, see [https://dev.na.bambora.com/docs/](https://dev.na.bambora.com/docs/)
+**Bambora** is a payment gateway.  This is a little simulator of some of their endpoints for use in testing.  Note that they do already offer a sandbox for development, see [https://dev.na.bambora.com/docs/](https://dev.na.bambora.com/docs/)
 
 # bootstrap
 
