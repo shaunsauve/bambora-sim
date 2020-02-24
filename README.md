@@ -47,8 +47,8 @@ curl http://localhost/v1/profiles  \
 		"token":{
 		      "name":"John Doe",
 		      "code":"C-3PhrFw-0001-28092019-0457-18799008-1234"
-			}
-		}'
+		}
+	    }'
 
 # output
 {
