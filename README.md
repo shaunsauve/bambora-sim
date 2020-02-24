@@ -66,14 +66,14 @@ curl http://localhost/v1/payments  \
 	-H "Authorization: Passcode your_encoded_payment_passcode"  \
 	-H "Content-Type: application/json" \
 	-d '{
-			"amount":100.00,
-			"payment_method":"payment_profile",
-			"payment_profile":{
-				"customer_code":"'$PROFILE_TOKEN'",
-				"card_id":1,
-				"complete":"true"
-			}
-		}'
+            "amount":100.00,
+            "payment_method":"payment_profile",
+            "payment_profile":{
+                "customer_code":"'$PROFILE_TOKEN'",
+                "card_id":1,
+                "complete":"true"
+            }
+        }'
 ```
 
 SEE test.sh
