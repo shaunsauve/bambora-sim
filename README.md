@@ -22,18 +22,18 @@ create single use token
 curl http://localhost/scripts/tokenization/tokens  \
 	-H "Content-Type: application/json" \
 	-d '{
-			"number":"4030000010001234",
-			"expiry_month":"02",
-			"expiry_year":"20",
-			"cvd":"123"
-		}'
+            "number":"4030000010001234",
+            "expiry_month":"02",
+            "expiry_year":"20",
+            "cvd":"123"
+        }'
 
 # output
 { 
-	"code":1, 
-	"message":"",
-	"token":"C-3PhrFw-0001-28092019-0457-18799008-1234",
-	"version":1
+    "code":1, 
+    "message":"",
+    "token":"C-3PhrFw-0001-28092019-0457-18799008-1234",
+    "version":1
 }
 ```
 
@@ -44,18 +44,18 @@ curl http://localhost/v1/profiles  \
 	-H "Authorization: Passcode your_encoded_payment_profile_passcode"  \
 	-H "Content-Type: application/json" \
 	-d '{  
-			"token":{
-				  "name":"John Doe",
-				  "code":"C-3PhrFw-0001-28092019-0457-18799008-1234"
-			}
-		}'
+            "token":{
+                "name":"John Doe",
+                "code":"C-3PhrFw-0001-28092019-0457-18799008-1234"
+            }
+        }'
 
 # output
 {
-	"code":1,
-	"message":"",
-	"token":"P-3PhrFw-0002-28092019-0457-41493767-1234",
-	"version":1
+    "code":1,
+    "message":"",
+    "token":"P-3PhrFw-0002-28092019-0457-41493767-1234",
+    "version":1
 }
 ```
 
