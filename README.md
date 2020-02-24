@@ -44,7 +44,7 @@ curl http://localhost/v1/profiles  \
 	-H "Authorization: Passcode your_encoded_payment_profile_passcode"  \
 	-H "Content-Type: application/json" \
 	-d '{  
-			"token":{
+		"token":{
 		      "name":"John Doe",
 		      "code":"C-3PhrFw-0001-28092019-0457-18799008-1234"
 			}
